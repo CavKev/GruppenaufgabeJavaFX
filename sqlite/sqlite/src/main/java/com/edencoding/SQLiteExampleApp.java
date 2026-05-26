@@ -13,12 +13,15 @@ import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
 import java.util.List;
+import java.util.Objects;
 
 public class SQLiteExampleApp extends Application {
 
@@ -41,6 +44,7 @@ public class SQLiteExampleApp extends Application {
 
 
         Button btnAddStudent = new Button("Neuen Studenten anlegen");
+        btnAddStudent.setStyle("-fx-background-color: #80ba24");
 
 
         // TableView
@@ -117,8 +121,14 @@ public class SQLiteExampleApp extends Application {
         //Layout
         VBox rootLayout = new VBox(15);
         rootLayout.setPadding(new Insets(15));
-        rootLayout.getChildren().addAll(btnAddStudent, tableView);
-        rootLayout.getStylesheets().add(getClass().getResource("cssStylesheetTableView").toExternalForm());
+        Image logoImg = new Image(Objects.requireNonNull(
+                getClass().getResourceAsStream("img/THM_Logo_184x75.png")
+        ));
+
+        ImageView logoView = new ImageView(logoImg);
+        rootLayout.getChildren().addAll(logoView,btnAddStudent, tableView);
+        //rootLayout.getStylesheets().add(getClass().getResource("cssStylsheetTableView.css").toExternalForm());
+        rootLayout.getStyleClass().add("rootLayout");
 
         // Szene
         primaryStage.setScene(new Scene(rootLayout, 600, 400));
