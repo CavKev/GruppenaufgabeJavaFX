@@ -73,7 +73,7 @@ public class SQLiteExampleApp extends Application {
         studienort.setCellValueFactory(new PropertyValueFactory<>("Studienort"));
         studienort.setPrefWidth(150);
 
-        // AktionsSpalte fürButtons (Bearbeiten & Löschen)
+        // AktionsSpalte fürButtons (Bearbeiten & Loeschen)
         TableColumn<Student, Void> actionColumn = new TableColumn<>("Aktionen");
         actionColumn.setPrefWidth(120);
 
@@ -118,6 +118,7 @@ public class SQLiteExampleApp extends Application {
         VBox rootLayout = new VBox(15);
         rootLayout.setPadding(new Insets(15));
         rootLayout.getChildren().addAll(btnAddStudent, tableView);
+        rootLayout.getStylesheets().add(getClass().getResource("cssStylesheetTableView").toExternalForm());
 
         // Szene
         primaryStage.setScene(new Scene(rootLayout, 600, 400));
