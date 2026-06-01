@@ -1,6 +1,5 @@
 package com.edencoding;
 
-
 import com.edencoding.dao.Database;
 import com.edencoding.dao.StudentDAO;
 import com.edencoding.models.Student;
@@ -16,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.util.Callback;
@@ -34,22 +34,90 @@ public class SQLiteExampleApp extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        // Datenbank
+        // Datenbank-Check
         if (!Database.isOK()) {
             Platform.exit();
             return;
         }
 
-        primaryStage.setTitle("Studentenverwaltung");
+        // App-Icon + Titel
+        primaryStage.setTitle("Studentenverwaltung - THM");
+        try {
+            Image appIcon = new Image(Objects.requireNonNull(
+                    getClass().getResourceAsStream("img/THM_Logo_184x75.png")
+            ));
+            primaryStage.getIcons().add(appIcon);
+        } catch (Exception e) {
+            System.out.println("App-Icon konnte nicht geladen werden.");
+        }
+
+        // Button hinzufuegen + Oeffnen von neuem Fenster
+        Button btnAddStudent = new Button("+ Neuen Studenten anlegen");
+        btnAddStudent.setStyle(
+                "-fx-background-color: #80ba24; " +
+                        "-fx-text-fill: white; " +
+                        "-fx-font-weight: bold; " +
+                        "-fx-padding: 8 15 8 15; " +
+                        "-fx-background-radius: 4;" +
+                        "-fx-cursor: hand;"
+        );
 
 
-        Button btnAddStudent = new Button("Neuen Studenten anlegen");
-        btnAddStudent.setStyle("-fx-background-color: #80ba24");
+        btnAddStudent.setOnAction(e -> {
 
+            // Aufruf neues Fenster
+            AddStudentWindow.display(primaryStage, (vorname, nachname, geburtsdatum, studienort) -> {
+
+                // zur Ueberprufung
+                System.out.println("Neuer Student empfangen:");
+                System.out.println("Name: " + vorname + " " + nachname);
+                System.out.println("Geburtsdatum: " + geburtsdatum);
+                System.out.println("Studienort: " + studienort);
+
+                // Hier kannst du den Studenten nun in deine Liste,
+                // TableView oder Datenbank eintragen:
+                // z.B. studentenListe.add(new Student(vorname, nachname, geburtsdatum, studienort));
+
+            });
+        });
+        btnAddStudent.setOnMouseEntered(e -> btnAddStudent.setStyle(
+                "-fx-background-color: #80ba24; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4; -fx-cursor: hand;"
+        ));
+        btnAddStudent.setOnMouseExited(e -> btnAddStudent.setStyle(
+                "-fx-background-color: #80ba24; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4; -fx-cursor: hand;"
+        ));
+
+        // Logo
+        ImageView logoView = new ImageView();
+        try {
+            Image logoImg = new Image(Objects.requireNonNull(
+                    getClass().getResourceAsStream("img/THM_Logo_184x75.png")
+            ));
+            logoView.setImage(logoImg);
+            logoView.setFitHeight(45); // Skalieren von Logohoehe
+            logoView.setPreserveRatio(true);
+        } catch (Exception e) {
+            System.out.println("Logo für die Kopfzeile konnte nicht geladen werden.");
+        }
+
+        // Kopfzeile (Logo links, Button rechts)
+        HBox headerBox = new HBox();
+        headerBox.setAlignment(Pos.CENTER_LEFT);
+        headerBox.setPadding(new Insets(0, 0, 10, 0));
+
+        // Region zum Herausschieben von Button nach rechts
+        javafx.scene.layout.Region spacer = new javafx.scene.layout.Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        headerBox.getChildren().addAll(logoView, spacer, btnAddStudent);
 
         // TableView
         tableView = new TableView<>();
-
+        tableView.setStyle(
+                "-fx-background-color: transparent; " +
+                        "-fx-base: #f4f4f4; " +
+                        "-fx-control-inner-background: #ffffff;"
+        );
         // Daten aus der DAO laden und in eine ObservableList packen
         List<Student> initialData = StudentDAO.loadStudentsFromDatabase();
         studentList = FXCollections.observableArrayList(initialData);
@@ -59,44 +127,44 @@ public class SQLiteExampleApp extends Application {
 
         TableColumn<Student, String> vorname = new TableColumn<>("Vorname");
         vorname.setCellValueFactory(new PropertyValueFactory<>("vorname"));
-        vorname.setPrefWidth(150);
 
         TableColumn<Student, String> name = new TableColumn<>("Nachname");
         name.setCellValueFactory(new PropertyValueFactory<>("name"));
-        name.setPrefWidth(150);
 
         TableColumn<Student, String> gebDatum = new TableColumn<>("Geburtsdatum");
         gebDatum.setCellValueFactory(new PropertyValueFactory<>("Geburtsdatum"));
-        gebDatum.setPrefWidth(150);
 
         TableColumn<Student, String> adresse = new TableColumn<>("Adresse");
         adresse.setCellValueFactory(new PropertyValueFactory<>("Adresse"));
-        adresse.setPrefWidth(150);
 
         TableColumn<Student, String> studienort = new TableColumn<>("Studienort");
         studienort.setCellValueFactory(new PropertyValueFactory<>("Studienort"));
-        studienort.setPrefWidth(150);
-
         // AktionsSpalte fürButtons (Bearbeiten & Loeschen)
         TableColumn<Student, Void> actionColumn = new TableColumn<>("Aktionen");
-        actionColumn.setPrefWidth(120);
+        actionColumn.setMinWidth(130);
+        actionColumn.setMaxWidth(130);
 
         Callback<TableColumn<Student, Void>, TableCell<Student, Void>> cellFactory = new Callback<>() {
             @Override
             public TableCell<Student, Void> call(final TableColumn<Student, Void> param) {
                 return new TableCell<>() {
-                    private final Button btnEdit = new Button("✏");
+                    private final Button btnEdit = new Button("✏ Bearbeiten");
                     private final Button btnDelete = new Button("❌");
                     private final HBox pane = new HBox(btnEdit, btnDelete);
 
                     {
-                        pane.setSpacing(10);
+                        pane.setSpacing(8);
                         pane.setAlignment(Pos.CENTER);
 
+                        // Styling für btnEdit
+                        btnEdit.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;");
+                        btnEdit.setOnMouseEntered(e -> btnEdit.setStyle("-fx-background-color: #d0d0d0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;"));
+                        btnEdit.setOnMouseExited(e -> btnEdit.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;"));
 
-
-
-
+                        // Styling für btnDelete
+                        btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;");
+                        btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;"));
+                        btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;"));
                     }
 
                     @Override
@@ -114,26 +182,20 @@ public class SQLiteExampleApp extends Application {
 
         actionColumn.setCellFactory(cellFactory);
 
-        // Spalten Tabelle hinzufügen
-        tableView.getColumns().addAll( vorname, name,gebDatum,adresse,studienort, actionColumn);
+        // Spalten hinzufügen & proportional verteilen
+        tableView.getColumns().addAll(vorname, name, gebDatum, adresse, studienort, actionColumn);
         tableView.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 
-        //Layout
-        VBox rootLayout = new VBox(15);
-        rootLayout.setPadding(new Insets(15));
-        Image logoImg = new Image(Objects.requireNonNull(
-                getClass().getResourceAsStream("img/THM_Logo_184x75.png")
-        ));
+        // Hauptlayout
+        VBox rootLayout = new VBox(10);
+        rootLayout.setPadding(new Insets(20));
+        rootLayout.setStyle("-fx-background-color: #f8f9fa;");
 
-        ImageView logoView = new ImageView(logoImg);
-        rootLayout.getChildren().addAll(logoView,btnAddStudent, tableView);
-        //rootLayout.getStylesheets().add(getClass().getResource("cssStylsheetTableView.css").toExternalForm());
-        rootLayout.getStyleClass().add("rootLayout");
+        rootLayout.getChildren().addAll(headerBox, tableView);
+        VBox.setVgrow(tableView, Priority.ALWAYS); // Tabelle füllt den restlichen Raum aus
 
         // Szene
-        primaryStage.setScene(new Scene(rootLayout, 600, 400));
-
-
+        primaryStage.setScene(new Scene(rootLayout, 850, 500));
         primaryStage.show();
     }
 }
