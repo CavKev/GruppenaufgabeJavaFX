@@ -1,0 +1,52 @@
+/* Hintergrund des Formulars */
+.form-grid {
+    -fx-background-color: white;
+}
+
+/* Alle Labels im Formular */
+.label {
+    -fx-text-fill: #4a5c66;
+    -fx-font-size: 14px;
+    -fx-font-weight: bold;
+}
+
+/* Alle Textfelder und der Editor des DatePickers */
+.text-field, .date-picker > .text-field {
+    -fx-background-color: white;
+    -fx-text-fill: #4a5c66;
+    -fx-background-radius: 5;
+    -fx-border-color: #ced4da; /* Optional: Leichter Rahmen für bessere Sichtbarkeit auf weißem Grund */
+    -fx-border-radius: 5;
+    -fx-padding: 5;
+}
+
+/* Fokus-Effekt für Textfelder */
+.text-field:focused, .date-picker > .text-field:focused {
+    -fx-border-color: #80ba24;
+}
+
+/* Basis-Styling für Buttons */
+.button {
+    -fx-font-weight: bold;
+    -fx-background-radius: 5;
+    -fx-padding: 8 15;
+    -fx-cursor: hand;
+}
+
+/* Spezifisch: Speichern-Button (Grün) */
+.btn-save {
+    -fx-background-color: #80ba24;
+    -fx-text-fill: white;
+}
+.btn-save:hover {
+    -fx-background-color: #6da21e; /* Leicht dunkler beim Drüberfahren */
+}
+
+/* Spezifisch: Abbrechen-Button (Rot) */
+.btn-cancel {
+    -fx-background-color: #9C132E;
+    -fx-text-fill: white;
+}
+.btn-cancel:hover {
+    -fx-background-color: #7f0f25; /* Leicht dunkler beim Drüberfahren */
+}

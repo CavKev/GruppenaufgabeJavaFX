@@ -53,14 +53,8 @@ public class SQLiteExampleApp extends Application {
 
         // Button hinzufuegen + Oeffnen von neuem Fenster
         Button btnAddStudent = new Button("+ Neuen Studenten anlegen");
-        btnAddStudent.setStyle(
-                "-fx-background-color: #80ba24; " +
-                        "-fx-text-fill: white; " +
-                        "-fx-font-weight: bold; " +
-                        "-fx-padding: 8 15 8 15; " +
-                        "-fx-background-radius: 4;" +
-                        "-fx-cursor: hand;"
-        );
+        btnAddStudent.getStyleClass().add("btn-add-student");
+
 
 
         btnAddStudent.setOnAction(e -> {
@@ -74,18 +68,13 @@ public class SQLiteExampleApp extends Application {
                 System.out.println("Geburtsdatum: " + geburtsdatum);
                 System.out.println("Studienort: " + studienort);
 
-                // Hier kannst du den Studenten nun in deine Liste,
+                // Hier kannst du den Studenten in deine Liste,
                 // TableView oder Datenbank eintragen:
                 // z.B. studentenListe.add(new Student(vorname, nachname, geburtsdatum, studienort));
 
             });
         });
-        btnAddStudent.setOnMouseEntered(e -> btnAddStudent.setStyle(
-                "-fx-background-color: #80ba24; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4; -fx-cursor: hand;"
-        ));
-        btnAddStudent.setOnMouseExited(e -> btnAddStudent.setStyle(
-                "-fx-background-color: #80ba24; -fx-text-fill: white; -fx-font-weight: bold; -fx-padding: 8 15 8 15; -fx-background-radius: 4; -fx-cursor: hand;"
-        ));
+
 
         // Logo
         ImageView logoView = new ImageView();
@@ -113,11 +102,7 @@ public class SQLiteExampleApp extends Application {
 
         // TableView
         tableView = new TableView<>();
-        tableView.setStyle(
-                "-fx-background-color: transparent; " +
-                        "-fx-base: #f4f4f4; " +
-                        "-fx-control-inner-background: #ffffff;"
-        );
+
         // Daten aus der DAO laden und in eine ObservableList packen
         List<Student> initialData = StudentDAO.loadStudentsFromDatabase();
         studentList = FXCollections.observableArrayList(initialData);
@@ -156,15 +141,10 @@ public class SQLiteExampleApp extends Application {
                         pane.setSpacing(8);
                         pane.setAlignment(Pos.CENTER);
 
-                        // Styling für btnEdit
-                        btnEdit.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;");
-                        btnEdit.setOnMouseEntered(e -> btnEdit.setStyle("-fx-background-color: #d0d0d0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;"));
-                        btnEdit.setOnMouseExited(e -> btnEdit.setStyle("-fx-background-color: #e0e0e0; -fx-text-fill: #4a5c66; -fx-font-size: 11px; -fx-cursor: hand;"));
+                        // Styling Buttons
+                        btnEdit.getStyleClass().add("btn-edit");
+                        btnDelete.getStyleClass().add("btn-delete");
 
-                        // Styling für btnDelete
-                        btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;");
-                        btnDelete.setOnMouseEntered(e -> btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;"));
-                        btnDelete.setOnMouseExited(e -> btnDelete.setStyle("-fx-background-color: #ffdddd; -fx-text-fill: #9c132e; -fx-font-size: 11px; -fx-cursor: hand;"));
                     }
 
                     @Override
@@ -189,13 +169,23 @@ public class SQLiteExampleApp extends Application {
         // Hauptlayout
         VBox rootLayout = new VBox(10);
         rootLayout.setPadding(new Insets(20));
-        rootLayout.setStyle("-fx-background-color: #f8f9fa;");
+
 
         rootLayout.getChildren().addAll(headerBox, tableView);
         VBox.setVgrow(tableView, Priority.ALWAYS); // Tabelle füllt den restlichen Raum aus
 
+
+
         // Szene
-        primaryStage.setScene(new Scene(rootLayout, 850, 500));
+        Scene scene = new Scene(rootLayout, 850, 500);
+        // Verbindung zu Stylesheet
+        try {
+            String cssPath = Objects.requireNonNull(getClass().getResource("/style.css")).toExternalForm();
+            scene.getStylesheets().add(cssPath);
+        } catch (Exception e) {
+            System.out.println("Stylesheet 'style.css' konnte nicht geladen werden.");
+        }
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 }

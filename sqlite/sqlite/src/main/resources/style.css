@@ -1,0 +1,60 @@
+/* Hauptfenster / Hintergrund */
+.main-container {
+    -fx-background-color: #f8f9fa;
+}
+
+/* Button: Neuen Studenten anlegen */
+.btn-add-student {
+    -fx-background-color: #80ba24;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-padding: 8 15 8 15;
+    -fx-background-radius: 4;
+    -fx-cursor: hand;
+}
+
+.btn-add-student:hover {
+    -fx-background-color: #6c9e1e; /* Leicht dunkleres THM-Grün beim Hovern */
+}
+
+/* Button: Bearbeiten (in der Tabelle) */
+.btn-edit {
+    -fx-background-color: #e0e0e0;
+    -fx-text-fill: #4a5c66;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.btn-edit:hover {
+    -fx-background-color: #d0d0d0;
+}
+
+/* Button: Löschen (in der Tabelle) */
+.btn-delete {
+    -fx-background-color: #ffdddd;
+    -fx-text-fill: #9c132e;
+    -fx-font-size: 11px;
+    -fx-cursor: hand;
+}
+
+.btn-delete:hover {
+    -fx-background-color: #ffbbbb; /* Spürbarer Hover-Effekt für das Löschen */
+}
+
+/* TableView Styling */
+.table-view {
+    -fx-background-color: transparent;
+    -fx-base: #f4f4f4;
+    -fx-control-inner-background: #ffffff;
+}
+
+/* Optionale Verschönerung der Tabellenkopfzeilen (passend zum THM-Look) */
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: #4a5c66;
+    -fx-size: 35px;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}

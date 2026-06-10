@@ -46,60 +46,57 @@ public class AddStudentWindow {
         grid.setAlignment(Pos.CENTER);
 
 
-        grid.setStyle("-fx-background-color: white;");
 
-        //Inline CSS-Styles
-        String labelStyle = "-fx-text-fill: #4a5c66; -fx-font-size: 14px; -fx-font-weight: bold;";
-        String inputStyle = "-fx-background-color: white; -fx-text-fill: #4a5c66; -fx-background-radius: 5; -fx-padding: 5;";
-        String btnSaveStyle = "-fx-background-color: #80ba24; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;";
-        String btnCancelStyle = "-fx-background-color: #9C132E; -fx-text-fill: white; -fx-font-weight: bold; -fx-background-radius: 5; -fx-padding: 8 15;";
+        grid.getStyleClass().add("form-grid");
+
 
         // Formular-Felder
 
         // Vorname
         Label lblVorname = new Label("Vorname:");
-        lblVorname.setStyle(labelStyle);
+
         TextField txtVorname = new TextField();
         txtVorname.setPromptText("Max");
-        txtVorname.setStyle(inputStyle);
+
         GridPane.setConstraints(lblVorname, 0, 0);
         GridPane.setConstraints(txtVorname, 1, 0);
 
         // Nachname
         Label lblNachname = new Label("Nachname:");
-        lblNachname.setStyle(labelStyle);
+
         TextField txtNachname = new TextField();
         txtNachname.setPromptText("Mustermann");
-        txtNachname.setStyle(inputStyle);
+
         GridPane.setConstraints(lblNachname, 0, 1);
         GridPane.setConstraints(txtNachname, 1, 1);
 
         // Geburtsdatum
         Label lblGeburtsdatum = new Label("Geburtsdatum:");
-        lblGeburtsdatum.setStyle(labelStyle);
+
         DatePicker datePicker = new DatePicker();
         datePicker.setPromptText("TT.MM.JJJJ");
-        // Style für das DatePicker-Textfeld anpassen
-        datePicker.getEditor().setStyle(inputStyle);
+
         GridPane.setConstraints(lblGeburtsdatum, 0, 2);
         GridPane.setConstraints(datePicker, 1, 2);
 
         // Studienort
         Label lblStudienort = new Label("Studienort:");
-        lblStudienort.setStyle(labelStyle);
+
         TextField txtStudienort = new TextField();
         txtStudienort.setPromptText("Frankenberg");
-        txtStudienort.setStyle(inputStyle);
+
         GridPane.setConstraints(lblStudienort, 0, 3);
         GridPane.setConstraints(txtStudienort, 1, 3);
 
         // Buttons
         Button btnCancel = new Button("Abbrechen");
-        btnCancel.setStyle(btnCancelStyle);
+
+        btnCancel.getStyleClass().add("btn-cancel");
         btnCancel.setOnAction(e -> window.close());
 
         Button btnSave = new Button("Student anlegen");
-        btnSave.setStyle(btnSaveStyle);
+
+        btnSave.getStyleClass().add("btn-save");
         btnSave.setOnAction(e -> {
             // Validierung: Prüfen,alle Felder ausgefüllt
             if (txtVorname.getText().isEmpty() || txtNachname.getText().isEmpty() ||
@@ -110,6 +107,10 @@ public class AddStudentWindow {
                 alert.setHeaderText(null);
                 alert.setContentText("Bitte füllen Sie alle Felder aus!");
                 alert.showAndWait();
+                // Stylesheet auf Alert-Fenster anwenden
+                if (window.getScene() != null) {
+                    alert.getDialogPane().getStylesheets().addAll(window.getScene().getStylesheets());
+                }
             } else {
                 // Daten an Listener übergeben
                 if (listener != null) {
@@ -134,6 +135,13 @@ public class AddStudentWindow {
         grid.getChildren().addAll(lblVorname, txtVorname, lblNachname, txtNachname, lblGeburtsdatum, datePicker, lblStudienort, txtStudienort, buttonBox);
 
         Scene scene = new Scene(grid);
+        // Stylesheet registrieren
+        try {
+            scene.getStylesheets().add(Objects.requireNonNull(
+                    AddStudentWindow.class.getResource("/style2.css")).toExternalForm());
+        } catch (Exception e) {
+            System.out.println("Stylesheet konnte nicht geladen werden: " + e.getMessage());
+        }
         window.setScene(scene);
         window.showAndWait(); // Wartet, bis Fenster geschlossen
     }
